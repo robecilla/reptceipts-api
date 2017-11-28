@@ -18,16 +18,6 @@ class ReceiptController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -35,7 +25,9 @@ class ReceiptController extends Controller
      */
     public function store(Request $request)
     {
-        //
+		// Creates a receipt
+		$receipt = Receipt::create($request->all());
+        return response()->json($receipt, 201);
     }
 
     /**
@@ -46,7 +38,7 @@ class ReceiptController extends Controller
      */
     public function show(Receipt $receipt)
     {
-        //
+        return $receipt;
     }
 
     /**
@@ -69,7 +61,8 @@ class ReceiptController extends Controller
      */
     public function update(Request $request, Receipt $receipt)
     {
-        //
+		$receipt->update($request->all());
+        return response()->json($receipt, 200);
     }
 
     /**
@@ -80,6 +73,7 @@ class ReceiptController extends Controller
      */
     public function destroy(Receipt $receipt)
     {
-        //
+		$receipt->delete();
+        return response()->json(null, 204);
     }
 }
