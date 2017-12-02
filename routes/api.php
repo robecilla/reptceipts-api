@@ -13,11 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
+});
 
-Route::resource('receipt', 'ReceiptController');
-Route::resource('user', 'UserController');
-Route::post('/signup', 'AccountController@index');
+// Declares register, log in, log out and password reset routes
 Route::auth();
+// Declares crud routes (GET,POST,PUT/PATCH,DELETE)
+Route::resource('receipt', 'ReceiptController');
