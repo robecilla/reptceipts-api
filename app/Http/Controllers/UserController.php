@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+
     }
 
     /**
@@ -27,22 +27,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-		try {
-			$user = User::create([
-				'name' => $request->name,
-				'email' => $request->email,
-				'password' => bcrypt($request->password),
-			]);
-		} catch(\Exception $e) {
-			// User already exists
-			return response()->json($e->errorInfo, 409);
-		}
 
-
-		$token = JWTAuth::fromUser($user);
-
-		return response()->json(compact('token'));
-		//return response()->json($user, 201);
     }
 
     /**
