@@ -20,16 +20,12 @@ class AuthController extends Controller
 			]);
 		} catch(\Exception $e) {
 			// User already exists
-            return response()->json([
-                'message' => 'User is already registered',
-            ], 409);
+            return response()->json('User is already registered', 409);
 		}
 
 		$token = JWTAuth::fromUser($user);
 
-        return response()->json([
-            'message' => 'Registered successfully'
-        ], 200);
+        return response()->json('Registered successfully', 200);
 	}
 
 	public function login(Request $request)
@@ -38,14 +34,10 @@ class AuthController extends Controller
 
 		try {
 			if (! $token = JWTAuth::attempt($login)) {
-			   return response()->json([
-                   'message' => 'Invalid credentials'
-               ], 401);
+			   return response()->json('Invalid credentials', 401);
 			}
 		} catch (JWTException $e) {
-            return response()->json([
-                'message' => 'Could not create jwt'
-            ], 500);
+            return response()->json('Could not create jwt', 500);
 		}
 
 		return response()->json(compact('token'));
