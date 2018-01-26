@@ -20,6 +20,7 @@ class ReceiptsTableSeeder extends Seeder
             Receipt::create([
                 'title' => $faker->company,
                 'body' => $faker->paragraph,
+                'user_id' => 1,
             ]);
         }
     }

@@ -20,15 +20,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // Declares register, log in, log out and password reset routes
 //Route::auth(); TODO: decide if use this shorcut
 
+// Declares crud routes (GET,POST,PUT/PATCH,DELETE)
 
-
-//Route::group(['prefix' => 'api', 'middleware' => 'cors'], function () {
 Route::post("login", "AuthController@login");
 Route::post('register', 'AuthController@register');
 
 Route::group(['middleware' => 'jwt.auth'], function () {
-	// Declares crud routes (GET,POST,PUT/PATCH,DELETE)
-	Route::resource('user', 'UserController');
 	Route::resource('receipt', 'ReceiptController');
+    Route::resource('user', 'UserController');
 });
-//});

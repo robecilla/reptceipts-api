@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Receipt;
+use App\User;
 use Illuminate\Http\Request;
 
 class ReceiptController extends Controller
@@ -13,8 +14,10 @@ class ReceiptController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return Receipt::all();
+    {   
+        $user = auth()->user();
+        $receipts = User::find(1)->receipts;
+        return response()->json($receipts, 201);
     }
 
     /**

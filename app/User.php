@@ -28,6 +28,14 @@ class User extends Authenticatable implements JWTSubject
         'password', 'remember_token',
     ];
 
+    /**
+     * Get user receipts
+     */
+    public function receipts()
+    {
+        return $this->hasMany('App\Receipt');
+    }
+
 	/**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
