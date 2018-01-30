@@ -18,9 +18,9 @@ class ReceiptsTableSeeder extends Seeder
         // Create receiptsrecords
         for ($i = 0; $i < $n; $i++) {
             Receipt::create([
-                'title' => $faker->company,
-                'body' => $faker->paragraph,
                 'user_id' => 1,
+                'location' => $faker->company,
+                'subtotal' => $faker->randomFloat(3, 0, 1000)
             ]);
         }
     }
