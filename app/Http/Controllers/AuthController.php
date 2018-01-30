@@ -14,9 +14,9 @@ class AuthController extends Controller
     public function register(Request $request) {
 		try {
 			$user = User::create([
-				'name' => $request->name,
 				'email' => $request->email,
 				'password' => bcrypt($request->password),
+				'username' => $request->username,
 			]);
 		} catch(\Exception $e) {
 			// User already exists
@@ -25,7 +25,7 @@ class AuthController extends Controller
 
 		$token = JWTAuth::fromUser($user);
 
-        return response()->json('Registered successfully', 200);
+        return response()->json(compact('token'), 200);
 	}
 
 	public function login(Request $request)
@@ -40,6 +40,6 @@ class AuthController extends Controller
             return response()->json('Could not create jwt', 500);
 		}
 
-		return response()->json(compact('token'));
+		return response()->json(compact('token'), 200);
 	}
 }
