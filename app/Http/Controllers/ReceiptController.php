@@ -16,8 +16,14 @@ class ReceiptController extends Controller
     public function index()
     {   
         $user = auth()->user();
-        $receipts = User::find($user->id)->receipts;
+        $receipts = User::find($user->id)->receipts->toArray();
+
+        foreach ($receipts as $key => $receipt) {
+            $receipts[$key]['retailer'] = Receipt::find($receipt['retailer_id'])->retailer->name;
+        }
+        
         return response()->json($receipts, 201);
+        //return response()->json($receipts, 201);
     }
 
     /**
