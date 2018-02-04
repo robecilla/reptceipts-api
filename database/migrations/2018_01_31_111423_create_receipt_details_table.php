@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateReceiptsTable extends Migration
+class CreateReceiptDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateReceiptsTable extends Migration
      */
     public function up()
     {
-        Schema::create('receipts', function (Blueprint $table) {
+        Schema::create('receipt_details', function (Blueprint $table) {
             $table->increments('id');
-            $table->smallInteger('user_id');
-            $table->smallInteger('retailer_id');
-            $table->decimal('subtotal');
-            $table->string('payment_method');
+            $table->smallInteger('receipt_id');
+			$table->json('items');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateReceiptsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('receipts');
+        Schema::dropIfExists('receipt_details');
     }
 }
