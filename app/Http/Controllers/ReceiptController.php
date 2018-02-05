@@ -9,21 +9,47 @@ use Illuminate\Http\Request;
 class ReceiptController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
+     * Display a generic listing of receipts.
+     * Returns only receipts attached to a particular user from their JWT.
      * @return \Illuminate\Http\Response
      */
     public function index()
     {   
         $user = auth()->user();
+        $receipts = User::find($user->id)->receipts;
+
+        return response()->json($receipts, 201);
+    }
+
+     /**
+     * Display specific list of receipts based on the web-client requirement.
+     * Returns only receipts attached to a particular user from their JWT.
+     * @return \Illuminate\Http\Response
+     */
+    public function getReceipt()
+    {
+        $user = auth()->user();
         $receipts = User::find($user->id)->receipts->toArray();
 
         foreach ($receipts as $key => $receipt) {
-            $receipts[$key]['retailer'] = Receipt::find($receipt['retailer_id'])->retailer->name;
+            // Just getting the name here
+            $receipts[$key]['retailer_name'] = Receipt::find($receipt['retailer_id'])->retailer->name;
         }
-        
+
         return response()->json($receipts, 201);
-        //return response()->json($receipts, 201);
+    }
+
+     /**
+     * Gets extra receipt information via id.
+     * Returns only receipts attached to a particular user from their JWT.
+     * @return \Illuminate\Http\Response
+     */
+    public function getDetail(Request $request)
+    {
+        $receipt_id = $request->id;
+        $detail = Receipt::find($receipt_id)->receiptDetail;
+
+        return response()->json($detail, 201);
     }
 
     /**
