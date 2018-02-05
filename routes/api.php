@@ -29,4 +29,5 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::resource('receipt', 'ReceiptController');
     Route::get('receipt/getDetail/{id}', 'ReceiptController@getDetail');
     Route::resource('user', 'UserController');
+    Route::resource('retailer', 'RetailerController');
 });

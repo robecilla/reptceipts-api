@@ -46,7 +46,7 @@ class RetailerController extends Controller
      */
     public function show(Retailer $retailer)
     {
-        //
+        return $retailer;
     }
 
     /**
