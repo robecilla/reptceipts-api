@@ -18,6 +18,11 @@ class ReceiptController extends Controller
         $user = auth()->user();
         $receipts = User::find($user->id)->receipts;
 
+        foreach ($receipts as $key => $receipt) {
+            // Just getting the name here
+            $receipts[$key]['retailer_name'] = Receipt::find($receipt['retailer_id'])->retailer->name;
+        }
+
         return response()->json($receipts, 201);
     }
 
@@ -26,7 +31,7 @@ class ReceiptController extends Controller
      * Returns only receipts attached to a particular user from their JWT.
      * @return \Illuminate\Http\Response
      */
-    public function getReceipt()
+    public function getUserReceipts()
     {
         $user = auth()->user();
         $receipts = User::find($user->id)->receipts->toArray();
@@ -37,19 +42,6 @@ class ReceiptController extends Controller
         }
 
         return response()->json($receipts, 201);
-    }
-
-     /**
-     * Gets extra receipt information via id.
-     * Returns only receipts attached to a particular user from their JWT.
-     * @return \Illuminate\Http\Response
-     */
-    public function getDetail(Request $request)
-    {
-        $receipt_id = $request->id;
-        $detail = Receipt::find($receipt_id)->receiptDetail;
-
-        return response()->json($detail, 201);
     }
 
     /**
@@ -65,15 +57,19 @@ class ReceiptController extends Controller
         return response()->json($receipt, 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Receipt  $receipt
+     /**
+     * Gets extra receipt information via id.
+     * Returns only receipts attached to a particular user from their JWT.
      * @return \Illuminate\Http\Response
      */
     public function show(Receipt $receipt)
     {
-        return $receipt;
+        $detail['retailer'] = Receipt::find($receipt->id)->retailer;
+        $detail['receipt'] = $receipt->receiptDetail;
+        // receipt foother information
+        // $detail['footer_info'] = $receipt->footer; or smnth like that
+
+        return response()->json($detail, 201);
     }
 
     /**

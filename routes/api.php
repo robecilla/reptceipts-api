@@ -13,21 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-// Declares register, log in, log out and password reset routes
-//Route::auth(); TODO: decide if use this shorcut
-
-// Declares crud routes (GET,POST,PUT/PATCH,DELETE)
-
 Route::post("login", "AuthController@login");
 Route::post('register', 'AuthController@register');
 
 Route::group(['middleware' => 'jwt.auth'], function () {
     Route::resource('receipt', 'ReceiptController');
-    Route::get('receipt/getDetail/{id}', 'ReceiptController@getDetail');
+    Route::get('receipt/getUserReceipts', 'ReceiptController@getUserReceipts');
     Route::resource('user', 'UserController');
     Route::resource('retailer', 'RetailerController');
 });
