@@ -13,12 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post("login", "AuthController@login");
+Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
 
 Route::group(['middleware' => 'jwt.auth'], function () {
     Route::resource('receipt', 'ReceiptController');
-    Route::get('receipt/getUserReceipts', 'ReceiptController@getUserReceipts');
     Route::resource('user', 'UserController');
     Route::resource('retailer', 'RetailerController');
 });
