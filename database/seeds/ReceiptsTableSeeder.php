@@ -14,14 +14,12 @@ class ReceiptsTableSeeder extends Seeder
     {
 		$faker = \Faker\Factory::create();
 
-		$n = 10;
+		$n = 25;
         // Create receiptsrecords
         for ($i = 0; $i < $n; $i++) {
             Receipt::create([
-                'user_id' => 2,
-                'retailer_id' => $i + 1,
-                'subtotal' => $faker->randomFloat(3, 0, 1000),
-                'payment_method' => 'Cash - Card'
+                'user_id' => 1,
+                'retailer_id' => $i + 1
             ]);
         }
     }

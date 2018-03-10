@@ -16,7 +16,11 @@ class CreateReceiptDetailsTable extends Migration
         Schema::create('receipt_details', function (Blueprint $table) {
             $table->increments('id');
             $table->smallInteger('receipt_id');
-			$table->json('items');
+            $table->json('items');
+            $table->decimal('total');
+            $table->decimal('subtotal');
+            $table->string('payment_method');
+            $table->smallInteger('VAT');
             $table->timestamps();
         });
     }

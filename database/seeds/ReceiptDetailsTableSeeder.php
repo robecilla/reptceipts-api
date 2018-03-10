@@ -20,17 +20,21 @@ class ReceiptDetailsTableSeeder extends Seeder
             $items[] = array(
                 'name' => $faker->lastName,
                 'quantity' => $faker->numberBetween($min = 0, $max = 5), 
-                'price' => $faker->randomFloat(3, 0, 1000), 
+                'price' => $faker->randomFloat(2, 0, 1000), 
                 'serial_no' => $faker->bankAccountNumber
             );
         }
 
-		$n = 10;
+        $payments = ['VISA', 'MasterCard', 'Cash'];
+		$n = 25;
         // Create receipts records
         for ($i = 0; $i < $n; $i++) {
             ReceiptDetail::create([
                 'receipt_id' => $i + 1,
-                'items' => json_encode($items)
+                'items' => json_encode($items),
+                'subtotal' => $faker->randomFloat(2, 0, 1000),
+                'payment_method' => $payments[mt_rand(0, count($payments) - 1)],
+                'VAT' => $faker->numberBetween(10,99)
             ]);
         }
     }

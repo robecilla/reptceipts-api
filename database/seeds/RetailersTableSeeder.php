@@ -14,7 +14,7 @@ class RetailersTableSeeder extends Seeder
     {
         $faker = \Faker\Factory::create();
 
-		$n = 10;
+		$n = 25;
         // Create retailers records
         for ($i = 0; $i < $n; $i++) {
             Retailer::create([

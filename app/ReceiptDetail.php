@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReceiptDetail extends Model
 {
-   protected $fillable = ['user_id', 'location', 'subtotal'];
+   protected $fillable = ['receipt_id', 'items', 'total', 'subtotal', 'payment_method', 'VAT'];
+
+    // public function receipt() {
+    //     return $this->hasOne('App\Receipt');    
+    // }
 }
