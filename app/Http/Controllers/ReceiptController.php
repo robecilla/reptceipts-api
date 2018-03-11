@@ -107,17 +107,11 @@ class ReceiptController extends Controller
         $items = json_decode($items);
 
         foreach ($items as $key => $item) {
-            $this->total += $item->price;
+            $this->total += ($item->price * $item->quantity);
         }
 
         $this->vat_value = ($vat / 100) * $this->total;
         $this->subtotal = $this->total + $this->vat_value ;
-
-
-        // foreach ($items as $key => $item) {
-        // }
-
-
     }
 
      /**
