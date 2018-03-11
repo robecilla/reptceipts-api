@@ -20,7 +20,8 @@ class CreateReceiptDetailsTable extends Migration
             $table->decimal('total');
             $table->decimal('subtotal');
             $table->string('payment_method');
-            $table->smallInteger('VAT');
+            $table->decimal('VAT');
+            $table->smallInteger('VAT_value');
             $table->timestamps();
         });
     }

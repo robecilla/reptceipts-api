@@ -12,6 +12,7 @@ class ReceiptController extends Controller
 
     private $total = 0;
     private $subtotal = 0;
+    private $vat_value = 0;
 
     /**
      * Display a generic listing of receipts.
@@ -90,7 +91,8 @@ class ReceiptController extends Controller
             'total' => round($this->total, 2),
             'subtotal' => round($this->subtotal, 2),
             'payment_method' => $request->payment,
-            'VAT' => $request->vat
+            'VAT' => round($this->vat_value, 2),
+            'VAT_value' => $request->vat
         ]);
 
         return response()->json('Created successfully', 201);
@@ -107,9 +109,15 @@ class ReceiptController extends Controller
         foreach ($items as $key => $item) {
             $this->total += $item->price;
         }
-        foreach ($items as $key => $item) {
-            $this->subtotal = $this->total + ($vat / 100) * $this->total;
-        }
+
+        $this->vat_value = ($vat / 100) * $this->total;
+        $this->subtotal = $this->total + $this->vat_value ;
+
+
+        // foreach ($items as $key => $item) {
+        // }
+
+
     }
 
      /**
