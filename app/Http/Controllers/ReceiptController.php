@@ -34,36 +34,6 @@ class ReceiptController extends Controller
 
     /**
      * Creates a new receipt record.
-     * Structure example:
-     * 
-     *  [
-     *      {
-     *          "user": 1,
-     *          "retailer": 2,
-     *          "items":[
-     *                   {
-     *                       "name": "item1",
-     *                       "price": 12,
-     *                       "quantity": 1,
-     *                       "serial_no": 76936078
-     *                   },
-     *                   {
-     *                       "name": "item2",
-     *                       "price": 673.43,
-     *                       "quantity": 1,
-     *                       "serial_no": 43158526
-     *                   },
-     *                   {       
-     *                       "name": "item3",
-     *                       "price": 193.71,
-     *                       "quantity": 5,
-     *                       "serial_no": 32735161341820
-     *                   }
-     *                  ],
-     *          "payment": "visa",
-     *          "vat": 21
-     *    }
-     *  ]
      * 
      * The total is calculated iterating over the array of item objects and 
      * dynamically adding item prices to the total.
@@ -92,7 +62,8 @@ class ReceiptController extends Controller
             'subtotal' => round($this->subtotal, 2),
             'payment_method' => $request->payment,
             'VAT' => round($this->vat_value, 2),
-            'VAT_value' => $request->vat
+            'VAT_value' => $request->vat,
+            'scan_type' => $request->scan_type
         ]);
 
         return response()->json('Created successfully', 201);
