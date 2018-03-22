@@ -32,16 +32,6 @@ class UserController extends Controller
 		return response()->json(compact('user'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-		// register handles this for now
-    }
 
     /**
      * Display the specified resource.
@@ -64,7 +54,13 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        // TODO
+        User::find($user->id)->update([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
+        ]);
+
+        return response()->json('Updated successfully', 200);
     }
 
     /**
@@ -75,6 +71,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        // TODO
+        $user->delete();
+        return response()->json(null, 204);
     }
 }
