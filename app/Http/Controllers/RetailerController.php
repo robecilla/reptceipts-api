@@ -8,38 +8,40 @@ use Illuminate\Http\Request;
 class RetailerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Displays a listing of Retailers.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        return response()->json(Retailer::all(), 200);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Stores a newly created Retailer.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+		$retailer = Retailer::create([
+            'name' => $request->name,
+            'address1' => $request->address1,
+            'address2' => $request->address2,
+            'address3' => $request->address3,
+            'postcode' => $request->postcode,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+            'mobile_number' => $request->mobile_number,
+        ]);
+
+        return response()->json($retailer, 201);
+
     }
 
     /**
-     * Display the specified resource.
+     * Display a specified Retailer.
      *
      * @param  \App\Retailer  $retailer
      * @return \Illuminate\Http\Response
@@ -50,18 +52,7 @@ class RetailerController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Retailer  $retailer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Retailer $retailer)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Updates a Retailer.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Retailer  $retailer
@@ -73,13 +64,13 @@ class RetailerController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Removes a Retailer
      *
      * @param  \App\Retailer  $retailer
      * @return \Illuminate\Http\Response
      */
     public function destroy(Retailer $retailer)
     {
-        //
+        $retailer->delete();
     }
 }
