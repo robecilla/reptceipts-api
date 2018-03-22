@@ -29,7 +29,7 @@ class ReceiptController extends Controller
             $receipts[$key]['subtotal'] = Receipt::find($receipt['id'])->receiptDetail->subtotal;
         }
 
-        return response()->json($receipts, 201);
+        return response()->json($receipts, 200);
     }
 
     /**
@@ -97,7 +97,7 @@ class ReceiptController extends Controller
         // receipt footer information
         // $detail['footer_info'] = $receipt->footer; or smnth like that
 
-        return response()->json($detail, 201);
+        return response()->json($detail, 200);
     }
 
     /**

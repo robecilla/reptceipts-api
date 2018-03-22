@@ -72,5 +72,6 @@ class RetailerController extends Controller
     public function destroy(Retailer $retailer)
     {
         $retailer->delete();
+        return response()->json(null, 204);
     }
 }
