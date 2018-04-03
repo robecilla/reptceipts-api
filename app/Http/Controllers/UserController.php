@@ -14,7 +14,19 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
+    {
+		return response()->json([
+            'code' => 200,
+            'response' => $user->all()
+        ], 200);
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function JWTuser()
     {
 		try {
 			if (! $user = JWTAuth::parseToken()->authenticate()) {
@@ -29,9 +41,39 @@ class UserController extends Controller
 		}
 
 		// the token is valid and we have found the user via the sub claim
-		return response()->json(compact('user'));
+		return response()->json([
+            'code' => 200,
+            'response' => compact('user')
+        ], 200);
     }
 
+    /**
+     * Creates a new user record.
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        try {
+			$user = User::create([
+				'email' => $request->email,
+				'password' => bcrypt($request->password),
+				'username' => $request->username,
+			]);
+		} catch(\Exception $e) {
+			// User already exists
+            return response()->json([
+				'code' => 409,
+				'response' => 'User is already registered'
+			], 409);
+        }
+        
+        return response()->json([
+			'code' => 200,
+			'response' => compact('user')
+		], 200);
+    }
 
     /**
      * Display the specified resource.
@@ -41,7 +83,10 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $user;
+        return response()->json([
+            'code' => 200,
+            'response' => compact('user')
+        ], 200);
     }
 
 
@@ -54,13 +99,24 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        User::find($user->id)->update([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
-        ]);
+        $user = User::find($user->id);
 
-        return response()->json('Updated successfully', 200);
+        foreach ($request->all() as $key => $var) {
+           if(!empty($var) && $key !== '_method') {
+                if($key === 'password') {
+                    $user->$key = bcrypt($var);
+                } else {
+                    $user->$key = $var;
+                }
+            }
+        }
+
+        $user->save();
+
+        return response()->json([
+            'code' => 200,
+            'response' => 'Updated successfully'
+        ], 200);
     }
 
     /**
@@ -72,6 +128,9 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return response()->json(null, 204);
+        return response()->json([
+            'code' => 200,
+            'response' => 'Deleted successfully'
+        ], 200);
     }
 }
