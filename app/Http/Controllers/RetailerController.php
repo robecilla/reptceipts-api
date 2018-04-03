@@ -14,7 +14,10 @@ class RetailerController extends Controller
      */
     public function index()
     {
-        return response()->json(Retailer::all(), 200);
+        return response()->json([
+            'code' => 200,
+            'response' => Retailer::all()
+        ], 200);
     }
 
     /**
@@ -36,7 +39,10 @@ class RetailerController extends Controller
             'mobile_number' => $request->mobile_number,
         ]);
 
-        return response()->json($retailer, 201);
+        return response()->json([
+            'code' => 200,
+            'response' => $retailer
+        ], 200);
 
     }
 
@@ -48,7 +54,10 @@ class RetailerController extends Controller
      */
     public function show(Retailer $retailer)
     {
-        return $retailer;
+        return response()->json([
+            'code' => 200,
+            'response' => compact('retailer')
+        ], 200);
     }
 
     /**
@@ -60,7 +69,20 @@ class RetailerController extends Controller
      */
     public function update(Request $request, Retailer $retailer)
     {
-        //
+        $retailer = Retailer::find($retailer->id);
+        
+        foreach ($request->all() as $key => $var) {
+            if(!empty($var) && $key !== '_method') {
+                $retailer->$key = $var;
+            }
+        }
+
+        $retailer->save();
+
+        return response()->json([
+            'code' => 200,
+            'response' => 'Updated successfully'
+        ], 200);
     }
 
     /**
@@ -72,6 +94,9 @@ class RetailerController extends Controller
     public function destroy(Retailer $retailer)
     {
         $retailer->delete();
-        return response()->json(null, 204);
+        return response()->json([
+            'code' => 200,
+            'response' => 'Deleted successfully'
+        ], 200);
     }
 }
