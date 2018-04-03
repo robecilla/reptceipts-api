@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Receipt;
 use App\ReceiptDetail;
 use App\User;
+use App\Retailer;
 use Illuminate\Http\Request;
 
 class ReceiptController extends Controller
@@ -24,12 +25,36 @@ class ReceiptController extends Controller
         $user = auth()->user();
         $receipts = User::find($user->id)->receipts;
         
+        return response()->json([
+            'code' => 200,
+            'response' => $this->buildReceiptList($receipts)
+        ], 200);
+    }
+
+    public function getReceiptsByUserID(Request $request)
+    {
+        try {
+            $receipts = User::find($request->user_id)->receipts;
+        } catch(\Exception $e) {
+            return response()->json([
+                'code' => 404,
+                'response' => 'User not found',
+            ], 404);
+        }
+        
+        return response()->json([
+            'code' => 200,
+            'response' => $this->buildReceiptList($receipts)
+        ], 200);
+    }
+
+    private function buildReceiptList($receipts) {
         foreach ($receipts as $key => $receipt) {
             $receipts[$key]['retailer_name'] = Receipt::find($receipt['id'])->retailer->name;
             $receipts[$key]['subtotal'] = Receipt::find($receipt['id'])->receiptDetail->subtotal;
         }
 
-        return response()->json($receipts, 200);
+        return $receipts;
     }
 
     /**
@@ -38,35 +63,49 @@ class ReceiptController extends Controller
      * The total is calculated iterating over the array of item objects and 
      * dynamically adding item prices to the total.
      * 
-     * The subtotal is calculated by applyting the VAT over the total.
+     * The subtotal is calculated by applying the VAT over the total.
      * 
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        
-        $this->calculateTotals($request->items, $request->vat);
+        try {
 
-		// Creates a receipt
-		$receipt = Receipt::create([
-            'user_id' => $request->user,
-            'retailer_id' => $request->retailer
-        ]);
-        
-        // Creates its detail
-        $detail = ReceiptDetail::create([
-            'receipt_id' => $receipt->id,
-            'items' => $request->items,
-            'total' => round($this->total, 2),
-            'subtotal' => round($this->subtotal, 2),
-            'payment_method' => $request->payment,
-            'VAT' => round($this->vat_value, 2),
-            'VAT_value' => $request->vat,
-            'scan_type' => $request->scan_type
-        ]);
+            $user = User::find($request->user_id);
+            $retailer = Retailer::find($request->retailer);
 
-        return response()->json('Created successfully', 201);
+            $this->calculateTotals($request->items, $request->vat);
+
+            // Creates a receipt
+            $receipt = Receipt::create([
+                'user_id' => $user->id,
+                'retailer_id' => $retailer->id
+            ]);
+            
+            // Creates its detail
+            $detail = ReceiptDetail::create([
+                'receipt_id' => $receipt->id,
+                'items' => $request->items,
+                'total' => round($this->total, 2),
+                'subtotal' => round($this->subtotal, 2),
+                'payment_method' => $request->payment,
+                'VAT' => round($this->vat_value, 2),
+                'VAT_value' => $request->vat,
+                'scan_type' => $request->scan_type
+            ]);
+
+        } catch(\Exception $e) {
+            return response()->json([
+                'code' => 404,
+                'response' => 'Not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'response' => 'Created successfully'
+        ], 200);
     }
 
     /**
@@ -97,7 +136,10 @@ class ReceiptController extends Controller
         // receipt footer information
         // $detail['footer_info'] = $receipt->footer; or smnth like that
 
-        return response()->json($detail, 200);
+        return response()->json([
+            'code' => 200,
+            'response' => $detail
+        ], 200);
     }
 
     /**
@@ -115,6 +157,9 @@ class ReceiptController extends Controller
         $receipt->delete();
         $detail->delete();
 
-        return response()->json(null, 204);
+        return response()->json([
+            'code' => 200,
+            'response' => 'Deleted successfully'
+        ], 200);
     }
 }
