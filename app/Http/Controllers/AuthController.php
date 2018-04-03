@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+	/**
+     * Register
+     * Creates a new user in the system and returns an unique JWT
+	 * to authorize subsequent calls
+     *
+     * @param Request $request
+     */
     public function register(Request $request) {
 		try {
 			$user = User::create([
@@ -20,26 +27,64 @@ class AuthController extends Controller
 			]);
 		} catch(\Exception $e) {
 			// User already exists
-            return response()->json('User is already registered', 409);
+            return response()->json([
+				'code' => 409,
+				'response' => 'User is already registered'
+			], 409);
 		}
 
 		$token = JWTAuth::fromUser($user);
 
-        return response()->json(compact('token'), 200);
+        return response()->json([
+			'code' => 200,
+			'response' => compact('token')
+		], 200);
 	}
 
+	/**
+     * Log in
+     * Logs in an existing user an return an unique JWT
+	 * to authorize subsequent calls
+     *
+     * @param Request $request
+     */
 	public function login(Request $request)
 	{
 		$login = $request->only('email', 'password');
 
 		try {
-			if (! $token = JWTAuth::attempt($login)) {
-			   return response()->json('Invalid credentials', 401);
+			if (!$token = JWTAuth::attempt($login)) {
+			   return response()->json([
+					'code' => 401,
+					'response' => 'Invalid credentials'
+				], 401);
 			}
 		} catch (JWTException $e) {
-            return response()->json('Could not create jwt', 500);
+            return response()->json([
+				'code' => 500,
+				'response' => 'Could not create JWT'
+			], 500);
 		}
 
-		return response()->json(compact('token'), 200);
+		return response()->json([
+			'code' => 200,
+			'response' => compact('token')
+		], 200);
 	}
+
+	/**
+     * Log out
+     * Invalidates the token.
+     *
+     * @param Request $request
+     */
+    public function logout(Request $request) {
+        
+        try {
+            JWTAuth::invalidate($request->token);
+            return response()->json(['code' => 200, 'response'=> "You have successfully logged out."]);
+        } catch (JWTException $e) {
+            return response()->json(['code' => 500, 'response' => 'Failed to logout, please try again.'], 500);
+        }
+    }
 }
