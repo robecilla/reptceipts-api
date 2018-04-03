@@ -21,8 +21,8 @@ class CreateRetailerTable extends Migration
             $table->string('address3');
             $table->string('postcode');
             $table->string('email')->unique();
-            $table->integer('phone_number');
-            $table->integer('mobile_number');
+            $table->string('phone_number');
+            $table->string('mobile_number');
             $table->timestamps();
         });
     }
