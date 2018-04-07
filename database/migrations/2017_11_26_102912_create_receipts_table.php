@@ -17,6 +17,7 @@ class CreateReceiptsTable extends Migration
             $table->increments('id');
             $table->smallInteger('user_id');
             $table->smallInteger('retailer_id');
+            $table->timestamps();
         });
     }
 

@@ -25,9 +25,7 @@ class RetailersTableSeeder extends Seeder
                 'postcode' => $faker->postcode,
                 'email' => $faker->safeEmail,
                 'phone_number' => $faker->ean8,
-                'mobile_number' => $faker->ean8,
-                // vat number
-                // website
+                'mobile_number' => $faker->ean8
             ]);
         }
     }
