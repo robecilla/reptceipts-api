@@ -57,6 +57,11 @@ class ReceiptController extends Controller
         return $receipts;
     }
 
+
+    public function getNFCReceipt() {
+        return response('{"retailer":2,"items":[{"name":"item1","price":12.99,"quantity":1,"serial_no":"1978AB-01"},{"name":"item2","price":6.99,"quantity":2,"serial_no":"4357AB-52"},{"name":"item3","price":0.05,"quantity":1,"serial_no":"9315EW-26"}],"payment":"VISA ending 8945","vat":21,"scan_type":2}');
+    }
+
     /**
      * Creates a new receipt record.
      * 
