@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
     title: 'reptceipts API',
-    clientUrl: 'http://reptceitps.co.uk',
+    clientUrl: 'http://reptceipts.co.uk',
   },
   plugins: ['gatsby-plugin-react-helmet'],
 }
