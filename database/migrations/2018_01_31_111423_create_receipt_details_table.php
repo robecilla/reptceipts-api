@@ -23,9 +23,10 @@ class CreateReceiptDetailsTable extends Migration
             $table->decimal('VAT');
             $table->smallInteger('VAT_value');
             $table->smallInteger('scan_type');
+            $table->boolean('is_redeemable');
             $table->timestamps();
         });
-    }
+    }   
 
     /**
      * Reverse the migrations.
