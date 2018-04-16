@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'gatsby-link'
+import apk from '../app-release.apk'
 
 const IndexPage = ({ data }) => (
   <section>
@@ -12,7 +13,7 @@ const IndexPage = ({ data }) => (
         reptceipts.co.uk
       </a>{' '}
       or{' '}
-      <a href="/app-release.apk" download>
+      <a href={apk} download>
         download
       </a>{' '}
       the reptceipts app to get started
