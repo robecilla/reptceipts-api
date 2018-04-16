@@ -10,10 +10,11 @@ const IndexPage = ({ data }) => (
     <p>
       There's nothing you can do from here, <br />visit{' '}
       <a href={data.site.siteMetadata.clientUrl} target="_blank">
+        {' '}
         reptceipts.co.uk
       </a>{' '}
       or{' '}
-      <a href={apk} download>
+      <a href="../app-release.apk" download>
         download
       </a>{' '}
       the reptceipts app to get started
