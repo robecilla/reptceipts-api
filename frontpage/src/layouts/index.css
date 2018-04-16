@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font: 15px Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+    Bitstream Vera Sans Mono, Courier New, monospace, serif;
+}
+
+a {
+  color: #22bad9;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  text-decoration: none;
+}
+
+a:hover {
+  color: #fff;
+  background: #22bad9;
+  text-decoration: none;
+}
+
+.main {
+  padding: 25px 50px;
+}
+
+.logo {
+  padding-bottom: 30px;
+}
+
+section {
+  max-width: 694px;
+}
+
+@media (max-width: 500px) {
+  .main {
+    padding: 25px 15px;
+  }
+
+  .logo {
+    padding-bottom: 20px;
+  }
+}
