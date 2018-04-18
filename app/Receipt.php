@@ -12,6 +12,10 @@ class Receipt extends Model
         return $this->belongsTo('App\Retailer');    
     }
 
+    public function user() {
+        return $this->belongsTo('App\User');    
+    }
+
     public function receiptDetail() {
         return $this->hasOne('App\ReceiptDetail');    
     }
