@@ -52,6 +52,7 @@ class ReceiptController extends Controller
         foreach ($receipts as $key => $receipt) {
             $receipts[$key]['retailer_name'] = Receipt::find($receipt['id'])->retailer->name;
             $receipts[$key]['subtotal'] = Receipt::find($receipt['id'])->receiptDetail->subtotal;
+            $receipts[$key]['is_redeemable'] = Receipt::find($receipt['id'])->receiptDetail->is_redeemable;
         }
 
         return $receipts;
@@ -62,10 +63,10 @@ class ReceiptController extends Controller
 
         $receipts = array(
             0,
-            '{"retailer":2,"items":[{"name":"item1","price":6.99,"quantity":2,"serial_no":"1978AB-01"},{"name":"item2","price":29.99,"quantity":1,"serial_no":"4357AB-52"}],"payment":"VISA ending 1276","vat":20,"scan_type":2}',
-            '{"retailer":8,"items":[{"name":"item1","price":12.99,"quantity":1,"serial_no":"1978AB-01"},{"name":"item2","price":6.99,"quantity":2,"serial_no":"4357AB-52"},{"name":"item3","price":0.05,"quantity":1,"serial_no":"9315EW-26"}],"payment":"Cash","vat":20,"scan_type":1}',
-            '{"retailer":19,"items":[{"name":"item1","price":12.99,"quantity":1,"serial_no":"1978AB-01"},{"name":"item2","price":6.99,"quantity":2,"serial_no":"4357AB-52"},{"name":"item3","price":0.05,"quantity":1,"serial_no":"9315EW-26"},{"name":"item4","price":7.25,"quantity":1,"serial_no":"9315EW-26"},{"name":"item5","price":0.05,"quantity":1,"serial_no":"9315EW-26"},{"name":"item6","price":9.95,"quantity":2,"serial_no":"9315EW-26"}],"payment":"MASTERCARD ending 9823","vat":20,"scan_type":2}',
-            '{"retailer":11,"items":[{"name":"item1","price":12.99,"quantity":1,"serial_no":"1978AB-01"},{"name":"item2","price":6.99,"quantity":2,"serial_no":"4357AB-52"},{"name":"item3","price":0.05,"quantity":1,"serial_no":"9315EW-26"}],"payment":"Cash","vat":20,"scan_type":2}'
+            '{"retailer":2,"items":[{"name":"item1","price":6.99,"quantity":2,"serial_no":"1978AB-01"},{"name":"item2","price":29.99,"quantity":1,"serial_no":"4357AB-52"}],"payment":"VISA ending 1276","vat":20,"is_redeemable": true}',
+            '{"retailer":8,"items":[{"name":"item1","price":12.99,"quantity":1,"serial_no":"1978AB-01"},{"name":"item2","price":6.99,"quantity":2,"serial_no":"4357AB-52"},{"name":"item3","price":0.05,"quantity":1,"serial_no":"9315EW-26"}],"payment":"Cash","vat":20,"is_redeemable": false}',
+            '{"retailer":19,"items":[{"name":"item1","price":12.99,"quantity":1,"serial_no":"1978AB-01"},{"name":"item2","price":6.99,"quantity":2,"serial_no":"4357AB-52"},{"name":"item3","price":0.05,"quantity":1,"serial_no":"9315EW-26"},{"name":"item4","price":7.25,"quantity":1,"serial_no":"9315EW-26"},{"name":"item5","price":0.05,"quantity":1,"serial_no":"9315EW-26"},{"name":"item6","price":9.95,"quantity":2,"serial_no":"9315EW-26"}],"payment":"MASTERCARD ending 9823","vat":20,"is_redeemable": true}',
+            '{"retailer":11,"items":[{"name":"item1","price":12.99,"quantity":1,"serial_no":"1978AB-01"},{"name":"item2","price":6.99,"quantity":2,"serial_no":"4357AB-52"},{"name":"item3","price":0.05,"quantity":1,"serial_no":"9315EW-26"}],"payment":"Cash","vat":20,"is_redeemable": false}'
         );
 
         return response()->json([
@@ -90,6 +91,14 @@ class ReceiptController extends Controller
         try {
 
             $user = User::find($request->user_id);
+
+            if(!$user) {
+                return response()->json([
+                    'code' => 404,
+                    'response' => 'User not found'
+                ], 404);
+            }
+
             $retailer = Retailer::find($request->retailer);
 
             $this->calculateTotals($request->items, $request->vat);
@@ -109,13 +118,14 @@ class ReceiptController extends Controller
                 'payment_method' => $request->payment,
                 'VAT' => round($this->vat_value, 2),
                 'VAT_value' => $request->vat,
-                'scan_type' => $request->scan_type
+                'scan_type' => $request->scan_type,
+                'is_redeemable' => $request->is_redeemable
             ]);
 
         } catch(\Exception $e) {
             return response()->json([
                 'code' => 404,
-                'response' => 'Not found',
+                'response' => $e->getMessage(),
             ], 404);
         }
 
@@ -148,10 +158,18 @@ class ReceiptController extends Controller
      */
     public function show(Receipt $receipt)
     {
+        $currentUser = auth()->user();
+        $receiptUser = Receipt::find($receipt->id)->user;
+
+        if($currentUser->id !==  $receiptUser->id) {
+            return response()->json([
+                'code' => 401,
+                'response' => 'Receipt does not belong to user'
+            ], 401);
+        }
+
         $detail['retailer'] = Receipt::find($receipt->id)->retailer;
         $detail['receipt'] = $receipt->receiptDetail;
-        // receipt footer information
-        // $detail['footer_info'] = $receipt->footer; or smnth like that
 
         return response()->json([
             'code' => 200,
