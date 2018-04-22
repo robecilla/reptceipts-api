@@ -21,7 +21,7 @@ class AuthController extends Controller
     public function register(Request $request) {
 		try {
 			$user = User::create([
-				'email' => $request->email,
+				'email' => strtolower($request->email),
 				'password' => bcrypt($request->password),
 				'username' => $request->username,
 			]);
@@ -50,13 +50,14 @@ class AuthController extends Controller
      */
 	public function login(Request $request)
 	{
-		$login = $request->only('email', 'password');
-
 		try {
-			if (!$token = JWTAuth::attempt($login)) {
+			if (!$token = JWTAuth::attempt([
+				"email" => strtolower($request->email),
+				"password" => $request->password
+			])) {
 			   return response()->json([
 					'code' => 401,
-					'response' => 'Invalid credentials'
+					'response' => 'Invalid credentials, please try again'
 				], 401);
 			}
 		} catch (JWTException $e) {
