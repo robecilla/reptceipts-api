@@ -14,10 +14,14 @@ class CreateReceiptsTable extends Migration
     public function up()
     {
         Schema::create('receipts', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('retailer_id');
-            $table->timestamps();
+            $table->timestamps('timecreated');
+            $table->integer('user_id')->unsigned();
+            $table->integer('retailer_id')->unsigned();
+            $table->timestamps('timecreated');
+        });
+        
+        Schema::table('receipts', function($table) {
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
