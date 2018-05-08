@@ -58,23 +58,6 @@ class ReceiptController extends Controller
         return $receipts;
     }
 
-
-    public function getNFCReceipt($id) {
-
-        $receipts = array(
-            0,
-            '{"retailer":2,"items":[{"name":"item1","price":6.99,"quantity":2,"serial_no":"1978AB-01"},{"name":"item2","price":29.99,"quantity":1,"serial_no":"4357AB-52"}],"payment":"VISA ending 1276","vat":20,"is_redeemable": true}',
-            '{"retailer":8,"items":[{"name":"item1","price":12.99,"quantity":1,"serial_no":"1978AB-01"},{"name":"item2","price":6.99,"quantity":2,"serial_no":"4357AB-52"},{"name":"item3","price":0.05,"quantity":1,"serial_no":"9315EW-26"}],"payment":"Cash","vat":20,"is_redeemable": false}',
-            '{"retailer":19,"items":[{"name":"item1","price":12.99,"quantity":1,"serial_no":"1978AB-01"},{"name":"item2","price":6.99,"quantity":2,"serial_no":"4357AB-52"},{"name":"item3","price":0.05,"quantity":1,"serial_no":"9315EW-26"},{"name":"item4","price":7.25,"quantity":1,"serial_no":"9315EW-26"},{"name":"item5","price":0.05,"quantity":1,"serial_no":"9315EW-26"},{"name":"item6","price":9.95,"quantity":2,"serial_no":"9315EW-26"}],"payment":"MASTERCARD ending 9823","vat":20,"is_redeemable": true}',
-            '{"retailer":11,"items":[{"name":"item1","price":12.99,"quantity":1,"serial_no":"1978AB-01"},{"name":"item2","price":6.99,"quantity":2,"serial_no":"4357AB-52"},{"name":"item3","price":0.05,"quantity":1,"serial_no":"9315EW-26"}],"payment":"Cash","vat":20,"is_redeemable": false}'
-        );
-
-        return response()->json([
-            'code' => 200,
-            'response' => $receipts[$id]
-        ], 200);
-    }
-
     /**
      * Creates a new receipt record.
      * 

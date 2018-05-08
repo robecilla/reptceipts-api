@@ -19,7 +19,6 @@ Route::post('register', 'AuthController@register');
 
 Route::group(['middleware' => 'jwt.auth'], function () {
     Route::resource('receipt', 'ReceiptController');
-    Route::get('receipt/getNFC/{id}', 'ReceiptController@getNFCReceipt');
     Route::post('receipt/userReceipts', 'ReceiptController@getReceiptsByUserID');
 
     Route::get('user/JWTuser', 'UserController@JWTuser');
