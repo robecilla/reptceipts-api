@@ -13,6 +13,16 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('login', 'AuthController@login');
+Route::post('logout', 'AuthController@logout');
+Route::post('register', 'AuthController@register');
+
+Route::group(['middleware' => 'jwt.auth'], function () {
+    Route::resource('receipt', 'ReceiptController');
+    Route::get('receipt/getNFC/{id}', 'ReceiptController@getNFCReceipt');
+    Route::post('receipt/userReceipts', 'ReceiptController@getReceiptsByUserID');
+
+    Route::get('user/JWTuser', 'UserController@JWTuser');
+    Route::resource('user', 'UserController');
+    Route::resource('retailer', 'RetailerController');
 });
